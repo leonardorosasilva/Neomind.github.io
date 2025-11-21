@@ -70,14 +70,13 @@ export default function ListagemFornecedores() {
         return false;
     });
 
-    // Aplicar ordenação
     const sortedFornecedores = [...filteredFornecedores].sort((a, b) => {
         if (!sortField) return 0;
 
         const aValue = a[sortField] || '';
         const bValue = b[sortField] || '';
 
-        // Converter para string para comparação
+
         const aStr = String(aValue).toLowerCase();
         const bStr = String(bValue).toLowerCase();
 
@@ -92,10 +91,10 @@ export default function ListagemFornecedores() {
 
     const handleSort = (field: keyof Fornecedor) => {
         if (sortField === field) {
-            // Se já está ordenando por este campo, inverte a direção
+    
             setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
         } else {
-            // Novo campo, começa com ascendente
+    
             setSortField(field);
             setSortDirection('asc');
         }
@@ -134,9 +133,6 @@ export default function ListagemFornecedores() {
         );
     };
 
-    // Função para importar JSON
-    // Função para importar JSON
-    // Função para importar JSON
     const handleImportJson = async () => {
         try {
             setImportError(null);
@@ -166,7 +162,7 @@ export default function ListagemFornecedores() {
 
             
 
-            // Usar o endpoint de importação em lote
+    
             const response = await fetch('http://localhost:8080/neostore/api/fornecedores/import', {
                 method: 'POST',
                 headers: {
@@ -187,10 +183,6 @@ export default function ListagemFornecedores() {
                 throw new Error(errorMessage);
             }
 
-            const result = await response.json();
-            
-
-            // Recarregar a lista de fornecedores após importação
             const listResponse = await fetch('http://localhost:8080/neostore/api/fornecedores/');
             if (listResponse.ok) {
                 const updatedFornecedores = await listResponse.json();
@@ -218,8 +210,6 @@ export default function ListagemFornecedores() {
         }
     };
 
-
-    // Função para importar arquivo JSON
     const handleFileImport = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (!file) return;
@@ -237,7 +227,6 @@ export default function ListagemFornecedores() {
         reader.readAsText(file);
     };
 
-    // Função para fechar modal de importação
     const closeImportModal = () => {
         setShowImportModal(false);
         setJsonText('');
@@ -260,7 +249,7 @@ export default function ListagemFornecedores() {
                 const data = await response.json();
                 
 
-                // Process descriptions here
+        
                 const processedData = data.map((fornecedor: Fornecedor) => ({
                     ...fornecedor,
                     description: fornecedor.description && fornecedor.description.length > 50
@@ -297,14 +286,13 @@ export default function ListagemFornecedores() {
     }, [searchTerm]);
 
     const handleEdit = (e: React.MouseEvent, fornecedor: Fornecedor) => {
-        e.stopPropagation(); // Evita o clique na linha
+        e.stopPropagation()
         const foundFornecedor = cloneFornecedores.find(f => f.id === fornecedor.id);
-        console.log('Editando fornecedor:', foundFornecedor); // Para debug
+        console.log('Editando fornecedor:', foundFornecedor)
         setFornecedorEditando(foundFornecedor);
         setShowForm(true);
     };
 
-    // Funções de navegação
     const goToPage = (page: number) => {
         setCurrentPage(page);
     };
@@ -321,20 +309,19 @@ export default function ListagemFornecedores() {
         }
     };
 
-    // Reset para primeira página quando os fornecedores mudarem
     useEffect(() => {
         setCurrentPage(1);
     }, [fornecedores.length]);
 
     const handleRowClick = (fornecedor: Fornecedor) => {
         const foundFornecedor = cloneFornecedores.find(f => f.id === fornecedor.id);
-        console.log('Clique na linha - fornecedor:', foundFornecedor); // Para debug
+        console.log('Clique na linha - fornecedor:', foundFornecedor)
         setFornecedorEditando(foundFornecedor);
         setShowForm(true);
     };
 
     const handleDelete = async (e: React.MouseEvent, id: string) => {
-        e.stopPropagation(); // Evita o clique na linha
+        e.stopPropagation()
         
 
         if (window.confirm('Tem certeza que deseja deletar este fornecedor?')) {
@@ -459,8 +446,7 @@ export default function ListagemFornecedores() {
                         </button>
                     )}
                 </div>
-
-                {/* Mostra quantos resultados foram encontrados */}                    {searchTerm && (
+                   {searchTerm && (
                         <div className="mt-4 md:mt-0">
                             <span className="text-sm text-gray-500">
                                 {sortedFornecedores.length === 0 ? (
@@ -474,8 +460,6 @@ export default function ListagemFornecedores() {
                         </div>
                     )}
             </div>
-
-                {/* Mensagem quando não há resultados */}
             {searchTerm && sortedFornecedores.length === 0 && (
                 <div className="mt-6 text-center py-12">
                     <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center">
@@ -837,7 +821,7 @@ export default function ListagemFornecedores() {
                                     
 
                                     if (isEdit) {
-                                        // Atualizar fornecedor existente
+                                
                                         setFornecedores(prev => prev.map(f =>
                                             f.id === fornecedorEditando.id ? {
                                                 ...savedFornecedor,
@@ -847,7 +831,7 @@ export default function ListagemFornecedores() {
                                             } : f
                                         ));
                                     } else {
-                                        // Adicionar novo fornecedor
+                                
                                         const processedFornecedor = {
                                             ...savedFornecedor,
                                             description: savedFornecedor.description && savedFornecedor.description.length > 50
